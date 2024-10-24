@@ -145,7 +145,7 @@ class SolOyun extends StatelessWidget {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          "Ülkeler Hangi Bölgede", // İkinci oyunun başlığı
+                          "Ülkeler Hangi Bölgede Oyunu", // İkinci oyunun başlığı
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,

@@ -17,7 +17,7 @@ class _YeniOyunState extends State<YeniOyun> {
   bool _cevapVerildi = false;
   bool _dogruCevap = false;
   String _dogruBolge = '';
-  bool _bolgeSecildi = false; // Bölge seçilip seçilmediğini kontrol etmek için
+  bool _bolgeSecildi = false;
 
   @override
   void initState() {
@@ -42,17 +42,16 @@ class _YeniOyunState extends State<YeniOyun> {
   void _rastgeleSoru() {
     final random = Random();
     _seciliUlke = _ulkeler[random.nextInt(_ulkeler.length)];
-    _cevapVerildi = false; // Cevap durumunu sıfırla
-    _dogruBolge = _seciliUlke!.bolge; // Doğru bölgeyi sakla
-    _bolgeSecildi = false; // Bölge seçimini sıfırla
+    _cevapVerildi = false;
+    _dogruBolge = _seciliUlke!.bolge;
+    _bolgeSecildi = false;
     setState(() {});
   }
 
   void _kontrolEt(String secilenBolge) {
     setState(() {
       _cevapVerildi = true;
-      _bolgeSecildi = true; // Bölge seçildi
-      // Seçilen bölgenin doğru olup olmadığını kontrol et
+      _bolgeSecildi = true;
       _dogruCevap = (secilenBolge == _dogruBolge);
     });
   }
@@ -62,8 +61,11 @@ class _YeniOyunState extends State<YeniOyun> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Hangi Ülke Nerede"),
-        backgroundColor: Colors.deepPurpleAccent,
+        title: Text(
+          "Ülkeler Hangi Bölgede",
+          style: TextStyle(fontSize: 40),
+        ),
+        backgroundColor: Colors.green,
       ),
       body: _seciliUlke == null
           ? Center(child: CircularProgressIndicator())
@@ -73,139 +75,149 @@ class _YeniOyunState extends State<YeniOyun> {
 
   Widget _buildBody() {
     return Container(
+      width: double.infinity, // Ekranı tam kaplama
+      height: double.infinity, // Ekranı tam kaplama
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.white, Colors.lightBlueAccent],
+          colors: [Colors.white, Colors.green],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
       ),
-      child: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(child: _buildUlkeCard(_seciliUlke!)),
+          
+          if (_cevapVerildi)
+            Column(
               children: [
-                _buildUlkeCard(_seciliUlke!),
-                SizedBox(height: 20),
-                if (_cevapVerildi)
-                  Column(
-                    children: [
-                      AnimatedSwitcher(
-                        duration: Duration(milliseconds: 300),
-                        child: Icon(
-                          _dogruCevap ? Icons.check_circle : Icons.cancel,
-                          key: ValueKey<bool>(_dogruCevap),
-                          color: _dogruCevap ? Colors.green : Colors.red,
-                          size: 64,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        _dogruCevap ? "Doğru!" : "Yanlış!",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Doğru Bölge: $_dogruBolge",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: _rastgeleSoru,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurpleAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
-                          textStyle:
-                              TextStyle(fontSize: 18), // Buton yazı boyutu
-                        ),
-                        child: Text("Yeni Ülke",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  child: Icon(
+                    _dogruCevap ? Icons.check_circle : Icons.cancel,
+                    key: ValueKey<bool>(_dogruCevap),
+                    color: _dogruCevap ? Colors.green : Colors.red,
+                    size: 64,
                   ),
-                SizedBox(height: 20),
-                // Ülkelerin bölgeleri için düğmeler
-                if (!_bolgeSecildi) // Bölge seçildiğinde düğmeleri gizle
-                  Column(
-                    children: [
-                      Text(
-                        "Bölgeyi Seçin:",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 10,
-                        children: _buildBolgeButtons(),
-                      ),
-                    ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  _dogruCevap ? "Doğru!" : "Yanlış!",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Doğru Bölge: $_dogruBolge",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _rastgeleSoru,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                  child:
+                      Text("Yeni Ülke", style: TextStyle(color: Colors.black)),
+                ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUlkeCard(Ulke ulke) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.network(
-            ulke.bayrak,
-            width: 100,
-            height: 60,
-          ),
           SizedBox(height: 10),
-          Text(
-            ulke.isim,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.deepPurpleAccent,
+          if (!_bolgeSecildi)
+            Column(
+              children: [
+                Text(
+                  "Bölgeyi Seçin:",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  children: _buildBolgeButtons(),
+                ),
+              ],
             ),
-          ),
+          SizedBox(height: 30), // Daha fazla alan bırakmak için
         ],
       ),
     );
   }
 
+  Widget _buildUlkeCard(Ulke ulke) {
+    return Center(
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width *
+              0.4, // Ekranın %40'ı kadar genişlik
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(
+                ulke.bayrak,
+                width: MediaQuery.of(context).size.width *
+                    0.4, // Kartla aynı genişlikte
+                height: 250, // Bayrağın yüksekliği
+                fit: BoxFit.cover,
+              ),
+              Text(
+                ulke.isim,
+                style: TextStyle(
+                  fontSize: 20, // Daha küçük font boyutu
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   List<Widget> _buildBolgeButtons() {
-    // Ülkelere özgü bölgeleri dinamik olarak düğme olarak oluşturma
     final List<String> bolgeler =
-        _ulkeler.map((ulke) => ulke.bolge).toSet().toList(); // Tekil bölgeler
+        _ulkeler.map((ulke) => ulke.bolge).toSet().toList();
     return bolgeler.map((bolge) {
       return ElevatedButton(
         onPressed: () {
           _kontrolEt(bolge);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.yellow,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
         child: Text(
           bolge,
-          style: TextStyle(color: Colors.white, fontSize: 16),
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 18), // Buton yazı boyutunu büyüttük
         ),
       );
     }).toList();
