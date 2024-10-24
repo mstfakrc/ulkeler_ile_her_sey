@@ -50,48 +50,52 @@ class _AnaSayfaState extends State<AnaSayfa> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: _aramaAktif
-          ? TextField(
-              controller: _aramaController,
-              decoration: InputDecoration(
-                hintText: "Ülke Ara...",
-                hintStyle: TextStyle(color: Colors.white),
-                border: InputBorder.none,
-              ),
-              onChanged: (value) {
-                _aramaSonuclari = _butunUlkeler.where((ulke) {
-                  return ulke.isim.toLowerCase().contains(value.toLowerCase());
-                }).toList();
-                setState(() {});
-              },
-            )
-          : Text(
-              "Tüm Ülkeler",
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1.2,
-              ),
-            ),
-      centerTitle: true,
-      backgroundColor: Colors.deepPurpleAccent,
-      flexibleSpace: Padding(
-        padding: const EdgeInsets.only(right: 16.0),
-        child: ClipOval(
-          child: Container(
-            width: 35, // Çemberin genişliği
-            height: 35, // Çemberin yüksekliği
+      title: Row(
+        children: [
+          Container(
+            width: 50, // Logonun genişliği
+            height: 50, // Logonun yüksekliği
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    "assets/ulkeler.png"), // Resim yolunu buraya yazın
-                fit: BoxFit.cover,
+              color: Colors.yellow, // Sarı arka plan rengi
+              borderRadius: BorderRadius.circular(25), // Kenar yuvarlama
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26, // Gölge rengi
+                  blurRadius: 6, // Gölgenin bulanıklığı
+                  offset: Offset(0, 2), // Gölgenin konumu
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        "assets/ulkeler.png"), // Resim yolunu buraya yazın
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          SizedBox(width: 8), // Logo ile yazı arasında boşluk
+          Expanded(
+            // Yazının ortalanmasını sağlamak için
+            child: Text(
+              "KÜRESEL KEŞİF",
+              textAlign: TextAlign.center, // Yazıyı ortala
+              style: TextStyle(
+                fontSize: 40, // Yazı boyutu
+                fontWeight: FontWeight.bold, // Yazı kalınlığı
+                color: Colors.white, // Yazı rengi
+                letterSpacing: 1.2, // Harf aralığı
+              ),
+            ),
+          ),
+        ],
       ),
+      centerTitle: false, // Ortalanmış başlık istemiyoruz
+      backgroundColor: Colors.deepPurpleAccent,
       actions: [
         IconButton(
           icon: Icon(
