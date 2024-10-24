@@ -96,7 +96,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         IconButton(
           icon: Icon(
             _aramaAktif ? Icons.clear : Icons.search,
-            color: Colors.yellow,
+            color: Colors.white,
           ),
           onPressed: () {
             setState(() {
