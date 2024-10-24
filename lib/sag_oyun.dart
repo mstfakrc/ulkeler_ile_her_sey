@@ -175,8 +175,7 @@ class SagOyun extends StatelessWidget {
                           // Oyun sayfasına geçiş yap
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => YeniDil()),
+                            MaterialPageRoute(builder: (context) => YeniDil()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -227,12 +226,7 @@ class SagOyun extends StatelessWidget {
             MaterialPageRoute(builder: (context) => AnaSayfa()),
           );
         },
-        onSagOyunPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SagOyun()),
-          );
-        },
+        onSagOyunPressed: () {},
         onSolOyunPressed: () {
           Navigator.pushReplacement(
             context,

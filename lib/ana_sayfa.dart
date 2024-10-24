@@ -20,6 +20,10 @@ class _AnaSayfaState extends State<AnaSayfa> {
 
   List<Ulke> _butunUlkeler = [];
   List<String> _favoriUlkeKodlari = [];
+  List<Ulke> _aramaSonuclari = [];
+  TextEditingController _aramaController = TextEditingController();
+  FocusNode _aramaFocusNode = FocusNode(); // FocusNode tanımı
+  bool _aramaAktif = false;
 
   @override
   void initState() {
@@ -27,6 +31,10 @@ class _AnaSayfaState extends State<AnaSayfa> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _favorileriCihazHafizasindanCek().then((value) {
         _ulkeleriInternettenCek();
+        if (_aramaAktif) {
+          FocusScope.of(context)
+              .requestFocus(_aramaFocusNode); // Arama açıldığında odaklan
+        }
       });
     });
   }
@@ -42,18 +50,64 @@ class _AnaSayfaState extends State<AnaSayfa> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text(
-        "Tüm Ülkeler",
-        style: TextStyle(
-          fontSize: 26,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          letterSpacing: 1.2,
-        ),
-      ),
+      title: _aramaAktif
+          ? TextField(
+              controller: _aramaController,
+              decoration: InputDecoration(
+                hintText: "Ülke Ara...",
+                hintStyle: TextStyle(color: Colors.white),
+                border: InputBorder.none,
+              ),
+              onChanged: (value) {
+                _aramaSonuclari = _butunUlkeler.where((ulke) {
+                  return ulke.isim.toLowerCase().contains(value.toLowerCase());
+                }).toList();
+                setState(() {});
+              },
+            )
+          : Text(
+              "Tüm Ülkeler",
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1.2,
+              ),
+            ),
       centerTitle: true,
       backgroundColor: Colors.deepPurpleAccent,
+      flexibleSpace: Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: ClipOval(
+          child: Container(
+            width: 35, // Çemberin genişliği
+            height: 35, // Çemberin yüksekliği
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    "assets/ulkeler.png"), // Resim yolunu buraya yazın
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ),
       actions: [
+        IconButton(
+          icon: Icon(
+            _aramaAktif ? Icons.clear : Icons.search,
+            color: Colors.yellow,
+          ),
+          onPressed: () {
+            setState(() {
+              _aramaAktif = !_aramaAktif; // Arama durumu değiştir
+              if (!_aramaAktif) {
+                _aramaController.clear(); // Arama çubuğu temizlensin
+                _aramaSonuclari.clear(); // Arama sonuçları temizlensin
+              }
+            });
+          },
+        ),
         IconButton(
           icon: Icon(
             Icons.favorite,
@@ -79,7 +133,12 @@ class _AnaSayfaState extends State<AnaSayfa> {
       ),
       child: _butunUlkeler.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : OrtakListe(_butunUlkeler, _favoriUlkeKodlari),
+          : OrtakListe(
+              _aramaAktif
+                  ? _aramaSonuclari
+                  : _butunUlkeler, // Arama durumuna göre liste
+              _favoriUlkeKodlari,
+            ),
     );
   }
 
@@ -144,5 +203,12 @@ class _AnaSayfaState extends State<AnaSayfa> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _aramaController.dispose();
+    _aramaFocusNode.dispose(); // FocusNode temizlenmesi
+    super.dispose();
   }
 }

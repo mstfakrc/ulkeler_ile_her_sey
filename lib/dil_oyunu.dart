@@ -2,29 +2,39 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ulkeleri_tani/bottom_navigation_bar.dart';
-import 'package:ulkeleri_tani/ana_sayfa.dart';
-import 'package:ulkeleri_tani/sol_oyun.dart';
-import 'package:ulkeleri_tani/sag_oyun.dart';
-import 'package:ulkeleri_tani/ulke.dart';
 
 class YeniDil extends StatefulWidget {
   @override
-  _YeniDilState createState() => _YeniDilState();
+  _DilOyunState createState() => _DilOyunState();
 }
 
-class _YeniDilState extends State<YeniDil> {
+class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
   final String _apiUrl = "https://restcountries.com/v3.1/all?fields=name,flags,languages";
   List<Ulke> _ulkeler = [];
   Ulke? _seciliUlke;
   bool _cevapVerildi = false;
   bool _dogruCevap = false;
   String _dogruDil = '';
+  List<String> _secenekDiller = [];
+  bool _animasyonOynat = false;
+  late AnimationController _animasyonKontrol;
 
   @override
   void initState() {
     super.initState();
     _ulkeleriYukle();
+    
+    // Animasyon kontrolcüsü tanımlanıyor
+    _animasyonKontrol = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animasyonKontrol.dispose();
+    super.dispose();
   }
 
   Future<void> _ulkeleriYukle() async {
@@ -43,16 +53,40 @@ class _YeniDilState extends State<YeniDil> {
   void _rastgeleSoru() {
     final random = Random();
     _seciliUlke = _ulkeler[random.nextInt(_ulkeler.length)];
-    _cevapVerildi = false; // Cevap durumunu sıfırla
-    _dogruDil = _seciliUlke!.diller.first; // Doğru dili sakla
-    setState(() {});
+    _cevapVerildi = false;
+    
+    // Ülkenin dillerini al
+    Map<String, dynamic> diller = _seciliUlke!.diller;
+
+    // Doğru dili seç
+    _dogruDil = diller.values.first; 
+
+    // Maksimum 10 adet dil seçeneği oluştur
+    List<String>? tumDiller = _ulkeler.expand((ulke) => ulke.diller.values).toSet().cast<String>().toList();
+    tumDiller!.shuffle();
+    _secenekDiller = tumDiller.take(9).toList();
+    
+    // Doğru cevabı da seçeneklere ekle
+    _secenekDiller.add(_dogruDil);
+    _secenekDiller.shuffle(); // Seçenekleri karıştır
+    
+    // Animasyonun sıfırlanması ve tekrar başlaması
+    setState(() {
+      _animasyonOynat = false; // Animasyonu sıfırlıyoruz
+    });
+
+    Future.delayed(Duration(milliseconds: 200), () {
+      setState(() {
+        _animasyonOynat = true; // Animasyonu tekrar başlatıyoruz
+        _animasyonKontrol.forward(from: 0); // Animasyonu en baştan oynat
+      });
+    });
   }
 
   void _kontrolEt(String secilenDil) {
     setState(() {
       _cevapVerildi = true;
-      // Seçilen dilin doğru olup olmadığını kontrol et
-      _dogruCevap = (secilenDil.toLowerCase() == _dogruDil.toLowerCase());
+      _dogruCevap = (secilenDil == _dogruDil);
     });
   }
 
@@ -61,33 +95,12 @@ class _YeniDilState extends State<YeniDil> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Dil Bilgisi Oyunu"),
+        title: Text("Hangi Ülke Hangi Dili Konuşur?"),
         backgroundColor: Colors.deepPurpleAccent,
-        automaticallyImplyLeading: false,
       ),
       body: _seciliUlke == null
           ? Center(child: CircularProgressIndicator())
           : _buildBody(),
-      bottomNavigationBar: BottomNavBar(
-        onHomePressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AnaSayfa()),
-          );
-        },
-        onSagOyunPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SagOyun()),
-          );
-        },
-        onSolOyunPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SolOyun()),
-          );
-        },
-      ),
     );
   }
 
@@ -112,10 +125,13 @@ class _YeniDilState extends State<YeniDil> {
                 if (_cevapVerildi)
                   Column(
                     children: [
-                      Icon(
-                        _dogruCevap ? Icons.check_circle : Icons.cancel,
-                        color: _dogruCevap ? Colors.green : Colors.red,
-                        size: 48,
+                      FadeTransition(
+                        opacity: _animasyonKontrol,
+                        child: Icon(
+                          _dogruCevap ? Icons.check_circle : Icons.cancel,
+                          color: _dogruCevap ? Colors.green : Colors.red,
+                          size: 48,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
@@ -141,14 +157,14 @@ class _YeniDilState extends State<YeniDil> {
                     ],
                   ),
                 SizedBox(height: 20),
-                // Ülkelerin dilleri için düğmeler
                 Text(
                   "Dili Seçin:",
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
                   children: _buildDilButtons(),
                 ),
               ],
@@ -184,15 +200,29 @@ class _YeniDilState extends State<YeniDil> {
   }
 
   List<Widget> _buildDilButtons() {
-    // Ülkelere özgü dilleri dinamik olarak düğme olarak oluşturma
-    final List<String> diller = _seciliUlke!.diller.toList(); // Seçilen ülkenin dilleri
-    return diller.map((dil) {
+    return _secenekDiller.map((dil) {
       return ElevatedButton(
-        onPressed: () {
+        onPressed: _cevapVerildi ? null : () {
           _kontrolEt(dil);
         },
         child: Text(dil),
       );
     }).toList();
+  }
+}
+
+class Ulke {
+  final String isim;
+  final String bayrak;
+  final Map<String, dynamic> diller;
+
+  Ulke({required this.isim, required this.bayrak, required this.diller});
+
+  factory Ulke.fromMap(Map<String, dynamic> map) {
+    return Ulke(
+      isim: map['name']['common'],
+      bayrak: map['flags']['png'],
+      diller: Map<String, dynamic>.from(map['languages']),
+    );
   }
 }

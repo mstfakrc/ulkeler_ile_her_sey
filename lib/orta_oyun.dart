@@ -2,11 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:ulkeleri_tani/sag_oyun.dart';
-import 'package:ulkeleri_tani/sol_oyun.dart';
 import 'package:ulkeleri_tani/ulke.dart';
-import 'package:ulkeleri_tani/bottom_navigation_bar.dart';
-import 'ana_sayfa.dart';
 
 class YeniOyun extends StatefulWidget {
   @override
@@ -14,12 +10,14 @@ class YeniOyun extends StatefulWidget {
 }
 
 class _YeniOyunState extends State<YeniOyun> {
-  final String _apiUrl = "https://restcountries.com/v3.1/all?fields=name,flags,cca2,population,region";
+  final String _apiUrl =
+      "https://restcountries.com/v3.1/all?fields=name,flags,cca2,population,region";
   List<Ulke> _ulkeler = [];
   Ulke? _seciliUlke;
   bool _cevapVerildi = false;
   bool _dogruCevap = false;
   String _dogruBolge = '';
+  bool _bolgeSecildi = false; // Bölge seçilip seçilmediğini kontrol etmek için
 
   @override
   void initState() {
@@ -32,7 +30,8 @@ class _YeniOyunState extends State<YeniOyun> {
     if (response.statusCode == 200) {
       List<dynamic> parsedResponse = jsonDecode(response.body);
       setState(() {
-        _ulkeler = parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
+        _ulkeler =
+            parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
         _rastgeleSoru();
       });
     } else {
@@ -45,12 +44,14 @@ class _YeniOyunState extends State<YeniOyun> {
     _seciliUlke = _ulkeler[random.nextInt(_ulkeler.length)];
     _cevapVerildi = false; // Cevap durumunu sıfırla
     _dogruBolge = _seciliUlke!.bolge; // Doğru bölgeyi sakla
+    _bolgeSecildi = false; // Bölge seçimini sıfırla
     setState(() {});
   }
 
   void _kontrolEt(String secilenBolge) {
     setState(() {
       _cevapVerildi = true;
+      _bolgeSecildi = true; // Bölge seçildi
       // Seçilen bölgenin doğru olup olmadığını kontrol et
       _dogruCevap = (secilenBolge == _dogruBolge);
     });
@@ -61,46 +62,25 @@ class _YeniOyunState extends State<YeniOyun> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Nüfus Karşılaştırma Oyunu"),
+        title: Text("Hangi Ülke Nerede"),
         backgroundColor: Colors.deepPurpleAccent,
-        automaticallyImplyLeading: false,
       ),
       body: _seciliUlke == null
           ? Center(child: CircularProgressIndicator())
           : _buildBody(),
-      bottomNavigationBar: BottomNavBar(
-        onHomePressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AnaSayfa()),
-          );
-        },
-        onSagOyunPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SagOyun()),
-          );
-        },
-        onSolOyunPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SolOyun()),
-          );
-        },
-      ),
     );
   }
 
   Widget _buildBody() {
-    return SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, Colors.lightBlueAccent],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.white, Colors.lightBlueAccent],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
+      ),
+      child: SingleChildScrollView(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -112,15 +92,23 @@ class _YeniOyunState extends State<YeniOyun> {
                 if (_cevapVerildi)
                   Column(
                     children: [
-                      Icon(
-                        _dogruCevap ? Icons.check_circle : Icons.cancel,
-                        color: _dogruCevap ? Colors.green : Colors.red,
-                        size: 48,
+                      AnimatedSwitcher(
+                        duration: Duration(milliseconds: 300),
+                        child: Icon(
+                          _dogruCevap ? Icons.check_circle : Icons.cancel,
+                          key: ValueKey<bool>(_dogruCevap),
+                          color: _dogruCevap ? Colors.green : Colors.red,
+                          size: 64,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         _dogruCevap ? "Doğru!" : "Yanlış!",
-                        style: TextStyle(fontSize: 24, color: Colors.black54),
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
@@ -135,22 +123,34 @@ class _YeniOyunState extends State<YeniOyun> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          textStyle:
+                              TextStyle(fontSize: 18), // Buton yazı boyutu
                         ),
-                        child: Text("Yeni Ülke", style: TextStyle(color: Colors.black)),
+                        child: Text("Yeni Ülke",
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),
                 SizedBox(height: 20),
                 // Ülkelerin bölgeleri için düğmeler
-                Text(
-                  "Bölgeyi Seçin:",
-                  style: TextStyle(fontSize: 20),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _buildBolgeButtons(),
-                ),
+                if (!_bolgeSecildi) // Bölge seçildiğinde düğmeleri gizle
+                  Column(
+                    children: [
+                      Text(
+                        "Bölgeyi Seçin:",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 10,
+                        children: _buildBolgeButtons(),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -176,7 +176,11 @@ class _YeniOyunState extends State<YeniOyun> {
           SizedBox(height: 10),
           Text(
             ulke.isim,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurpleAccent,
+            ),
           ),
         ],
       ),
@@ -185,13 +189,24 @@ class _YeniOyunState extends State<YeniOyun> {
 
   List<Widget> _buildBolgeButtons() {
     // Ülkelere özgü bölgeleri dinamik olarak düğme olarak oluşturma
-    final List<String> bolgeler = _ulkeler.map((ulke) => ulke.bolge).toSet().toList(); // Tekil bölgeler
+    final List<String> bolgeler =
+        _ulkeler.map((ulke) => ulke.bolge).toSet().toList(); // Tekil bölgeler
     return bolgeler.map((bolge) {
       return ElevatedButton(
         onPressed: () {
           _kontrolEt(bolge);
         },
-        child: Text(bolge),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurpleAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        child: Text(
+          bolge,
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
       );
     }).toList();
   }

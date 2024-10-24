@@ -42,34 +42,35 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.deepPurpleAccent,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.star,
-              color: selectedIndex == 0 ? Colors.yellow : Colors.white,
-            ),
-            onPressed: () => handleButtonPress(0),
+    return Stack(
+      children: [
+        BottomAppBar(
+          color: Colors.purple, // Alt navigasyon arka planı
+          elevation: 10, // Gölgeli görünüm için
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceAround, // İkonları eşit aralıkla yerleştir
+            children: [
+              _buildIconButton(Icons.star, 0), // "Sol Oyun" butonu
+              _buildIconButton(Icons.home, 1), // "Ana Sayfa" butonu
+              _buildIconButton(Icons.flag, 2), // "Sağ Oyun" butonu
+            ],
           ),
-          IconButton(
-            icon: Icon(
-              Icons.home,
-              color: selectedIndex == 1 ? Colors.yellow : Colors.white,
-            ),
-            onPressed: () => handleButtonPress(1),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.flag,
-              color: selectedIndex == 2 ? Colors.yellow : Colors.white,
-            ),
-            onPressed: () => handleButtonPress(2),
-          ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildIconButton(IconData icon, int index) {
+    return IconButton(
+      icon: Icon(
+        icon,
+        color: selectedIndex == index
+            ? Colors.yellow
+            : Colors.white, // Seçiliyse sarı
+        size: 30, // İkon boyutu
       ),
+      onPressed: () => handleButtonPress(index),
     );
   }
 }
