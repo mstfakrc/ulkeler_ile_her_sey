@@ -88,7 +88,7 @@ class _YeniOyunState extends State<YeniOyun> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(child: _buildUlkeCard(_seciliUlke!)),
-          
+          SizedBox(height: 20),
           if (_cevapVerildi)
             Column(
               children: [
