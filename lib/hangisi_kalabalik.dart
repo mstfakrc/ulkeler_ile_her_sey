@@ -88,7 +88,12 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("HANGİ ÜLKE DAHA KALABALIK"),
+        title: Text(
+          "HANGİ ÜLKE DAHA KALABALIK",
+          style: TextStyle(
+            fontSize: 40,
+          ),
+        ),
         backgroundColor: Colors.purple,
         actions: [
           IconButton(

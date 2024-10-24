@@ -56,6 +56,29 @@ class _YeniOyunState extends State<YeniOyun> {
     });
   }
 
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Oyun Bilgisi"),
+          content: Text(
+            "Bu oyun, ülkelerin hangi kıtada olduğunu öğrenmenizi sağlamaktadır.İyi Eğlenceler ",
+            textAlign: TextAlign.justify,
+          ),
+          actions: [
+            TextButton(
+              child: Text("Tamam"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +89,12 @@ class _YeniOyunState extends State<YeniOyun> {
           style: TextStyle(fontSize: 40),
         ),
         backgroundColor: Colors.green,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            onPressed: _showInfoDialog,
+          ),
+        ],
       ),
       body: _seciliUlke == null
           ? Center(child: CircularProgressIndicator())

@@ -11,213 +11,237 @@ class SagOyun extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Başkentler",
+          "Başkentler ve Diller",
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 40,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            letterSpacing: 1.2, // Başlıkta biraz aralık
+            letterSpacing: 1.2,
           ),
         ),
-        backgroundColor: Colors.deepPurple[700],
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.deepPurpleAccent,
         centerTitle: true,
         elevation: 8,
         shadowColor: Colors.deepPurple.withOpacity(0.6),
       ),
-      body: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.indigo, Colors.purpleAccent],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.purpleAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Row(
+            children: [
+              Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.flag_rounded,
-                        size: 100,
-                        color: Colors.yellowAccent[400]!.withOpacity(0.8),
-                        shadows: [
-                          Shadow(
-                            blurRadius: 12.0,
-                            color: Colors.black.withOpacity(0.6),
-                            offset: Offset(3.0, 3.0),
-                          ),
-                        ],
+                  padding: const EdgeInsets.all(12.0),
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/cc.jpg'), // Fotoğrafın yolu
+                          fit: BoxFit.cover, // Resmi kaplamak için
+                        ),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      AnimatedContainer(
-                        duration: Duration(seconds: 1),
-                        curve: Curves.easeInOut,
-                        child: Text(
-                          "Başkent Bulma Oyunu",
-                          style: TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.amberAccent[400],
-                            shadows: [
-                              Shadow(
-                                blurRadius: 15.0,
-                                color: Colors.black.withOpacity(0.6),
-                                offset: Offset(3.0, 3.0),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.flag_rounded,
+                                size: 100,
+                                color:
+                                    Colors.yellowAccent[400]!.withOpacity(0.8),
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 12.0,
+                                    color: Colors.black.withOpacity(0.6),
+                                    offset: Offset(3.0, 3.0),
+                                  ),
+                                ],
                               ),
+                              AnimatedContainer(
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInOut,
+                                child: Text(
+                                  "Başkent Bulma Oyunu",
+                                  style: TextStyle(
+                                    fontSize: 38,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 15.0,
+                                        color: Colors.black.withOpacity(0.6),
+                                        offset: Offset(3.0, 3.0),
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(height: 50),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BaskentBulmaOyunu()),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.deepPurple[800],
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 15),
+                                  textStyle: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 1.2,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  shadowColor: Colors.black.withOpacity(0.3),
+                                  elevation: 10,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.play_arrow, color: Colors.white),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      "Oyunu Başlat",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
                             ],
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
-                      SizedBox(height: 50),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Oyun sayfasına geçiş yap
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BaskentBulmaOyunu()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.deepPurple[800], // Koyu mor arka plan
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
-                          textStyle: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 1.2,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          shadowColor: Colors.black
-                              .withOpacity(0.3), // Daha hafif bir gölge
-                          elevation: 10,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.play_arrow,
-                                color: Colors.white), // Oynat simgesi ekleyelim
-                            SizedBox(
-                                width: 10), // İkon ile metin arasında boşluk
-                            Text(
-                              "Oyunu Başlat",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.indigo, Colors.purpleAccent],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Center(
+              Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.language,
-                        size: 100,
-                        color: Colors.yellowAccent[400]!.withOpacity(0.8),
-                        shadows: [
-                          Shadow(
-                            blurRadius: 12.0,
-                            color: Colors.black.withOpacity(0.6),
-                            offset: Offset(3.0, 3.0),
-                          ),
-                        ],
+                  padding: const EdgeInsets.all(12.0),
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/dd.jpg'), // Fotoğrafın yolu
+                          fit: BoxFit.cover, // Resmi kaplamak için
+                        ),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      AnimatedContainer(
-                        duration: Duration(seconds: 1),
-                        curve: Curves.easeInOut,
-                        child: Text(
-                          "Ülkeler Hnagi Dili Konuşur",
-                          style: TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.amberAccent[400],
-                            shadows: [
-                              Shadow(
-                                blurRadius: 15.0,
-                                color: Colors.black.withOpacity(0.6),
-                                offset: Offset(3.0, 3.0),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.language,
+                                size: 100,
+                                color:
+                                    Colors.yellowAccent[400]!.withOpacity(0.8),
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 12.0,
+                                    color: Colors.black.withOpacity(0.6),
+                                    offset: Offset(3.0, 3.0),
+                                  ),
+                                ],
                               ),
+                              AnimatedContainer(
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInOut,
+                                child: Text(
+                                  "Ülkeler Hangi Dili Konuşur",
+                                  style: TextStyle(
+                                    fontSize: 38,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 15.0,
+                                        color: Colors.black.withOpacity(0.6),
+                                        offset: Offset(3.0, 3.0),
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(height: 50),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => YeniDil()),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.deepPurple[800],
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 15),
+                                  textStyle: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 1.2,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  shadowColor: Colors.black.withOpacity(0.3),
+                                  elevation: 10,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.play_arrow, color: Colors.white),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      "Oyunu Başlat",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
                             ],
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
-                      SizedBox(height: 50),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Oyun sayfasına geçiş yap
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => YeniDil()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.deepPurple[800], // Koyu mor arka plan
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
-                          textStyle: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 1.2,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          shadowColor: Colors.black
-                              .withOpacity(0.3), // Daha hafif bir gölge
-                          elevation: 10,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.play_arrow,
-                                color: Colors.white), // Oynat simgesi ekleyelim
-                            SizedBox(
-                                width: 10), // İkon ile metin arasında boşluk
-                            Text(
-                              "Oyunu Başlat",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
+              )
+            ],
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: BottomNavBar(
         onHomePressed: () {

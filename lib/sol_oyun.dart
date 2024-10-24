@@ -14,7 +14,7 @@ class SolOyun extends StatelessWidget {
         title: Text(
           "Nüfuslar ve Bölgeler",
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 40,
             fontWeight: FontWeight.bold,
             color: Colors.white,
             letterSpacing: 1.5,
@@ -49,8 +49,6 @@ class SolOyun extends StatelessWidget {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white
-                          .withOpacity(0.8), // Yarı saydam beyaz katman
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
@@ -65,7 +63,7 @@ class SolOyun extends StatelessWidget {
                         Text(
                           "Hangi Ülke Daha Kalabalık Oyunu",
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -123,16 +121,14 @@ class SolOyun extends StatelessWidget {
                   margin: EdgeInsets.all(10), // Kenarlardan boşluk
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image:
-                          AssetImage('assets/bb.jpg'), // Arka plan resmi
+                      image: AssetImage('assets/bb.jpg'), // Arka plan resmi
                       fit: BoxFit.cover, // Resmin alanı kaplaması için
                     ),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white
-                          .withOpacity(0.8), // Yarı saydam beyaz katman
+                       
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
@@ -147,7 +143,7 @@ class SolOyun extends StatelessWidget {
                         Text(
                           "Ülkeler Hangi Bölgede Oyunu", // İkinci oyunun başlığı
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
