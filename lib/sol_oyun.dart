@@ -23,6 +23,7 @@ class SolOyun extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: Container(
+        height: MediaQuery.of(context).size.height, // Tüm ekran boyutunu al
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.white, Colors.purple],
@@ -53,7 +54,7 @@ class SolOyun extends StatelessWidget {
                 () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>YeniOyun()),
+                    MaterialPageRoute(builder: (context) => YeniOyun()),
                   );
                 },
               ),
@@ -86,6 +87,9 @@ class SolOyun extends StatelessWidget {
     String title,
     VoidCallback onPressed,
   ) {
+    // Dinamik kart yüksekliğini belirle
+    double cardHeight = MediaQuery.of(context).size.height * 0.3; // Kartın yüksekliğini ekranın %30'u olarak ayarlıyoruz
+
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Card(
@@ -94,6 +98,7 @@ class SolOyun extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Container(
+          height: cardHeight, // Dinamik yükseklik
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(imagePath),
@@ -137,7 +142,7 @@ class SolOyun extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 30), // Butonun yukarısında daha fazla boşluk
                   ElevatedButton(
                     onPressed: onPressed,
                     style: ElevatedButton.styleFrom(
