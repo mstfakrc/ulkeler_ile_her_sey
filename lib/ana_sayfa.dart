@@ -31,10 +31,6 @@ class _AnaSayfaState extends State<AnaSayfa> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _favorileriCihazHafizasindanCek().then((value) {
         _ulkeleriInternettenCek();
-        if (_aramaAktif) {
-          FocusScope.of(context)
-              .requestFocus(_aramaFocusNode); // Arama açıldığında odaklan
-        }
       });
     });
   }
@@ -53,16 +49,16 @@ class _AnaSayfaState extends State<AnaSayfa> {
       title: Row(
         children: [
           Container(
-            width: 50, // Logonun genişliği
-            height: 50, // Logonun yüksekliği
+            width: 50, 
+            height: 50,
             decoration: BoxDecoration(
-              color: Colors.yellow, // Sarı arka plan rengi
-              borderRadius: BorderRadius.circular(25), // Kenar yuvarlama
+              color: Colors.yellow, 
+              borderRadius: BorderRadius.circular(25), 
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black26, // Gölge rengi
-                  blurRadius: 6, // Gölgenin bulanıklığı
-                  offset: Offset(0, 2), // Gölgenin konumu
+                  color: Colors.black26,
+                  blurRadius: 6,
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -70,53 +66,69 @@ class _AnaSayfaState extends State<AnaSayfa> {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                        "assets/ulkeler.png"), // Resim yolunu buraya yazın
+                    image: AssetImage("assets/ulkeler.png"),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
           ),
-          SizedBox(width: 8), // Logo ile yazı arasında boşluk
+          SizedBox(width: 8),
           Expanded(
-            // Yazının ortalanmasını sağlamak için
             child: Text(
               "KÜRESEL KEŞİF",
-              textAlign: TextAlign.center, // Yazıyı ortala
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 40, // Yazı boyutu
-                fontWeight: FontWeight.bold, // Yazı kalınlığı
-                color: Colors.white, // Yazı rengi
-                letterSpacing: 1.2, // Harf aralığı
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1.2,
               ),
             ),
           ),
         ],
       ),
-      centerTitle: false, // Ortalanmış başlık istemiyoruz
+      centerTitle: false,
       backgroundColor: Colors.deepPurpleAccent,
       actions: [
         IconButton(
-          icon: Icon(
-            _aramaAktif ? Icons.clear : Icons.search,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.info_outline, color: Colors.white),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Bilgilendirme"),
+                  content: Text(
+                    "Bu uygulama size dünyadaki ülkeler hakkında bilgi vermektedir.",
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text("Kapat"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+        IconButton(
+          icon: Icon(_aramaAktif ? Icons.clear : Icons.search, color: Colors.white),
           onPressed: () {
             setState(() {
-              _aramaAktif = !_aramaAktif; // Arama durumu değiştir
+              _aramaAktif = !_aramaAktif;
               if (!_aramaAktif) {
-                _aramaController.clear(); // Arama çubuğu temizlensin
-                _aramaSonuclari.clear(); // Arama sonuçları temizlensin
+                _aramaController.clear();
+                _aramaSonuclari.clear();
               }
             });
           },
         ),
         IconButton(
-          icon: Icon(
-            Icons.favorite,
-            color: Colors.red,
-          ),
+          icon: Icon(Icons.favorite, color: Colors.red),
           onPressed: () {
             _favorilerSayfasiniAc(context);
           },
@@ -135,22 +147,41 @@ class _AnaSayfaState extends State<AnaSayfa> {
           end: Alignment.bottomCenter,
         ),
       ),
-      child: _butunUlkeler.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : OrtakListe(
-              _aramaAktif
-                  ? _aramaSonuclari
-                  : _butunUlkeler, // Arama durumuna göre liste
-              _favoriUlkeKodlari,
-            ),
+      child: Column(
+        children: [
+          _aramaAktif
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _aramaController,
+                    focusNode: _aramaFocusNode,
+                    decoration: InputDecoration(
+                      hintText: "Ülke adıyla arayın...",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onChanged: _aramaYap, // Arama işlevi burada çağrılır
+                  ),
+                )
+              : Container(),
+          Expanded(
+            child: _butunUlkeler.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : OrtakListe(
+                    _aramaAktif ? _aramaSonuclari : _butunUlkeler,
+                    _favoriUlkeKodlari,
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildBottomAppBar(BuildContext context) {
     return BottomNavBar(
-      onHomePressed: () {
-        // Ana sayfaya geçişte değişiklik yok
-      },
+      onHomePressed: () {},
       onSagOyunPressed: () {
         Navigator.push(
           context,
@@ -166,6 +197,14 @@ class _AnaSayfaState extends State<AnaSayfa> {
     );
   }
 
+  void _aramaYap(String query) {
+    setState(() {
+      _aramaSonuclari = _butunUlkeler
+          .where((ulke) => ulke.isim.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
   void _ulkeleriInternettenCek() async {
     Uri uri = Uri.parse(_apiUrl);
     http.Response response = await http.get(uri);
@@ -173,12 +212,9 @@ class _AnaSayfaState extends State<AnaSayfa> {
     if (response.statusCode == 200) {
       List<dynamic> parsedResponse = jsonDecode(response.body);
 
-      for (var ulkeMap in parsedResponse) {
-        Ulke ulke = Ulke.fromMap(ulkeMap);
-        _butunUlkeler.add(ulke);
-      }
-
-      setState(() {});
+      setState(() {
+        _butunUlkeler = parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -190,11 +226,11 @@ class _AnaSayfaState extends State<AnaSayfa> {
 
   Future<void> _favorileriCihazHafizasindanCek() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     List<String>? favoriler = prefs.getStringList("favoriler");
-
     if (favoriler != null) {
-      _favoriUlkeKodlari.addAll(favoriler);
+      setState(() {
+        _favoriUlkeKodlari.addAll(favoriler);
+      });
     }
   }
 
@@ -212,7 +248,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
   @override
   void dispose() {
     _aramaController.dispose();
-    _aramaFocusNode.dispose(); // FocusNode temizlenmesi
+    _aramaFocusNode.dispose();
     super.dispose();
   }
 }

@@ -69,7 +69,7 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
         return AlertDialog(
           title: Text("Oyun Açıklaması"),
           content: Text("Bu oyunda iki ülkenin nüfusu karşılaştırılmaktadır ve "
-              "en kalabalık olanı bulmaya çalışacaksınız."),
+              "en kalabalık olanı bulmaya çalışacaksınız.İyi Eğlenceler"),
           actions: [
             TextButton(
               child: Text("Tamam"),
