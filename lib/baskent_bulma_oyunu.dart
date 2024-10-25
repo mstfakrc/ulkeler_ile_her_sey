@@ -86,6 +86,7 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                
               },
               child: Text("Tamam"),
             ),
@@ -109,6 +110,7 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
           IconButton(
             icon: Icon(Icons.info_outline),
             onPressed: _gosterBilgilendirme,
+            color: Colors.white,
           ),
         ],
       ),
@@ -256,7 +258,7 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
                     shadowColor: Colors.red.withOpacity(0.5),
                   ),
                   child: Text(
-                    "Yeni Soru",
+                    "Yeni Ülke",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.of(context).size.width * 0.045, // Dinamik font boyutu

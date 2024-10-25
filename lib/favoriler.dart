@@ -19,7 +19,9 @@ class _FavorilerState extends State<Favoriler> {
   @override
   void initState() {
     super.initState();
-    _favoriUlkeler = widget._butunUlkeler.where((ulke) => widget._favoriUlkeKodlari.contains(ulke.ulkeKodu)).toList();
+    _favoriUlkeler = widget._butunUlkeler
+        .where((ulke) => widget._favoriUlkeKodlari.contains(ulke.ulkeKodu))
+        .toList();
   }
 
   @override
@@ -39,14 +41,16 @@ class _FavorilerState extends State<Favoriler> {
     return AppBar(
       title: Text(
         "Favoriler",
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(
+            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
       ),
       centerTitle: true,
-      backgroundColor: Colors.deepPurpleAccent, // Daha uyumlu bir renk
-      elevation: 4, // Hafif gölge efekti
+      backgroundColor: Colors.purple,
+      elevation: 4,
       actions: [
         IconButton(
           icon: Icon(Icons.info_outline),
+          color: Colors.white,
           onPressed: () {
             _showInfoDialog();
           },
@@ -76,7 +80,10 @@ class _FavorilerState extends State<Favoriler> {
   }
 
   Widget _buildBody() {
-    final filteredUlkeler = _favoriUlkeler.where((ulke) => ulke.isim.toLowerCase().contains(_aramaMetni.toLowerCase())).toList();
+    final filteredUlkeler = _favoriUlkeler
+        .where((ulke) =>
+            ulke.isim.toLowerCase().contains(_aramaMetni.toLowerCase()))
+        .toList();
 
     return Container(
       decoration: BoxDecoration(
@@ -86,7 +93,7 @@ class _FavorilerState extends State<Favoriler> {
           end: Alignment.bottomCenter,
         ),
       ),
-      padding: const EdgeInsets.all(16.0), // Padding ekle
+      padding: const EdgeInsets.all(16.0),
       child: filteredUlkeler.isNotEmpty
           ? OrtakListe(filteredUlkeler, widget._favoriUlkeKodlari)
           : Center(
@@ -104,7 +111,8 @@ class _FavorilerState extends State<Favoriler> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Açıklama"),
-          content: Text("Buradaki ülkeler favori olarak seçtiğiniz ülkelerdir."),
+          content: Text(
+              "Buradaki ülkeler favori olarak seçtiğiniz ülkelerdir. Favori ülkelerinizi buradan görüntüleyebilirsiniz."),
           actions: [
             TextButton(
               child: Text("Tamam"),
@@ -116,5 +124,18 @@ class _FavorilerState extends State<Favoriler> {
         );
       },
     );
+  }
+
+  // Yeni fonksiyonlar
+  void _toggleFavorite(Ulke ulke) {
+    setState(() {
+      if (widget._favoriUlkeKodlari.contains(ulke.ulkeKodu)) {
+        widget._favoriUlkeKodlari.remove(ulke.ulkeKodu); // Favoriden çıkar
+        _favoriUlkeler.remove(ulke);
+      } else {
+        widget._favoriUlkeKodlari.add(ulke.ulkeKodu); // Favoriye ekle
+        _favoriUlkeler.add(ulke);
+      }
+    });
   }
 }

@@ -19,6 +19,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
       centerTitle: true,
       backgroundColor: Colors.lightBlueAccent,
       elevation: 0,
+      title: Text("Ülke Detayları"), // AppBar başlığını ekleyelim
     );
   }
 
@@ -55,18 +56,21 @@ class UlkeDetaySayfasi extends StatelessWidget {
         ),
         child: Container(
           padding: const EdgeInsets.all(16),
-          height: MediaQuery.of(context).size.height * 0.6,
+          // Ekran boyutuna göre yüksekliği esnek hale getiriyoruz
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height * 0.4, // Minimum yükseklik
+          ),
           child: Column(
             children: [
-              _buildDetayRow("Ülke İsmi: ", _ulke.isim),
+              _buildDetayRow("Ülke İsmi:", _ulke.isim),
               Divider(),
-              _buildDetayRow("Başkent: ", _ulke.baskent),
+              _buildDetayRow("Başkent:", _ulke.baskent),
               Divider(),
-              _buildDetayRow("Bölge: ", _ulke.bolge),
+              _buildDetayRow("Bölge:", _ulke.bolge),
               Divider(),
-              _buildDetayRow("Nüfus: ", _ulke.nufus.toString()),
+              _buildDetayRow("Nüfus:", _ulke.nufus.toString()),
               Divider(),
-              _buildDetayRow("Dil: ", _ulke.dil),
+              _buildDetayRow("Dil:", _ulke.dil),
             ],
           ),
         ),
@@ -117,7 +121,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
       child: Text(
         _ulke.isim,
         style: TextStyle(
-          fontSize: 48,
+          fontSize: 36, // Font boyutunu biraz küçültüyoruz
           fontWeight: FontWeight.bold,
           color: Colors.deepPurpleAccent,
         ),
@@ -133,7 +137,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
           child: Text(
             baslik,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 18, // Font boyutunu biraz küçültüyoruz
               fontWeight: FontWeight.bold,
               color: Colors.black54,
             ),
@@ -144,7 +148,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
           child: Text(
             detay,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 18, // Font boyutunu biraz küçültüyoruz
               color: Colors.black,
             ),
           ),
