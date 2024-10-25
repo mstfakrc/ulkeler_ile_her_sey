@@ -63,7 +63,7 @@ class _YeniOyunState extends State<YeniOyun> {
         return AlertDialog(
           title: Text("Oyun Bilgisi"),
           content: Text(
-            "Bu oyun, ülkelerin hangi kıtada olduğunu öğrenmenizi sağlamaktadır.İyi Eğlenceler ",
+            "Bu oyun, ülkelerin hangi kıtada olduğunu öğrenmenizi sağlamaktadır. İyi Eğlenceler ",
             textAlign: TextAlign.justify,
           ),
           actions: [
@@ -86,7 +86,7 @@ class _YeniOyunState extends State<YeniOyun> {
         centerTitle: true,
         title: Text(
           "Ülkeler Hangi Bölgede",
-          style: TextStyle(fontSize: 40),
+          style: TextStyle(fontSize: 24), // Font boyutunu ayarladık
         ),
         backgroundColor: Colors.green,
         actions: [
@@ -104,8 +104,8 @@ class _YeniOyunState extends State<YeniOyun> {
 
   Widget _buildBody() {
     return Container(
-      width: double.infinity, // Ekranı tam kaplama
-      height: double.infinity, // Ekranı tam kaplama
+      width: double.infinity,
+      height: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.white, Colors.green],
@@ -117,7 +117,7 @@ class _YeniOyunState extends State<YeniOyun> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(child: _buildUlkeCard(_seciliUlke!)),
-          SizedBox(height: 20),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           if (_cevapVerildi)
             Column(
               children: [
@@ -130,7 +130,7 @@ class _YeniOyunState extends State<YeniOyun> {
                     size: 64,
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Text(
                   _dogruCevap ? "Doğru!" : "Yanlış!",
                   style: TextStyle(
@@ -139,7 +139,7 @@ class _YeniOyunState extends State<YeniOyun> {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Text(
                   "Doğru Bölge: $_dogruBolge",
                   style: TextStyle(
@@ -148,7 +148,7 @@ class _YeniOyunState extends State<YeniOyun> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 ElevatedButton(
                   onPressed: _rastgeleSoru,
                   style: ElevatedButton.styleFrom(
@@ -156,7 +156,10 @@ class _YeniOyunState extends State<YeniOyun> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.1,
+                      vertical: MediaQuery.of(context).size.height * 0.02,
+                    ),
                     textStyle: TextStyle(fontSize: 18),
                   ),
                   child:
@@ -164,7 +167,7 @@ class _YeniOyunState extends State<YeniOyun> {
                 ),
               ],
             ),
-          SizedBox(height: 10),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           if (!_bolgeSecildi)
             Column(
               children: [
@@ -176,7 +179,7 @@ class _YeniOyunState extends State<YeniOyun> {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 10,
@@ -184,7 +187,7 @@ class _YeniOyunState extends State<YeniOyun> {
                 ),
               ],
             ),
-          SizedBox(height: 30), // Daha fazla alan bırakmak için
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         ],
       ),
     );
@@ -199,22 +202,21 @@ class _YeniOyunState extends State<YeniOyun> {
         ),
         clipBehavior: Clip.antiAlias,
         child: SizedBox(
-          width: MediaQuery.of(context).size.width *
-              0.4, // Ekranın %40'ı kadar genişlik
+          width: MediaQuery.of(context).size.width * 0.8, // Ekranın %80'ine ayarladık
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.network(
                 ulke.bayrak,
-                width: MediaQuery.of(context).size.width *
-                    0.4, // Kartla aynı genişlikte
-                height: 250, // Bayrağın yüksekliği
+                width: MediaQuery.of(context).size.width * 0.8, // Kartla aynı genişlikte
+                height: MediaQuery.of(context).size.height * 0.3, // Bayrağın yüksekliği
                 fit: BoxFit.cover,
               ),
+              SizedBox(height: 8),
               Text(
                 ulke.isim,
                 style: TextStyle(
-                  fontSize: 20, // Daha küçük font boyutu
+                  fontSize: 22, // Font boyutunu ayarladık
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -240,13 +242,17 @@ class _YeniOyunState extends State<YeniOyun> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.1, // Ekranın %10'u
+            vertical: MediaQuery.of(context).size.height * 0.02,
+          ),
         ),
         child: Text(
           bolge,
           style: TextStyle(
-              color: Colors.black,
-              fontSize: 18), // Buton yazı boyutunu büyüttük
+            color: Colors.black,
+            fontSize: 18,
+          ), // Buton yazı boyutunu büyüttük
         ),
       );
     }).toList();

@@ -8,33 +8,19 @@ class YeniDil extends StatefulWidget {
   _DilOyunState createState() => _DilOyunState();
 }
 
-class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
-  final String _apiUrl =
-      "https://restcountries.com/v3.1/all?fields=name,flags,languages";
+class _DilOyunState extends State<YeniDil> {
+  final String _apiUrl = "https://restcountries.com/v3.1/all?fields=name,flags,languages";
   List<Ulke> _ulkeler = [];
   Ulke? _seciliUlke;
   bool _cevapVerildi = false;
   bool _dogruCevap = false;
   String _dogruDil = '';
   List<String> _secenekDiller = [];
-  bool _animasyonOynat = false;
-  late AnimationController _animasyonKontrol;
 
   @override
   void initState() {
     super.initState();
     _ulkeleriYukle();
-
-    _animasyonKontrol = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 500),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animasyonKontrol.dispose();
-    super.dispose();
   }
 
   Future<void> _ulkeleriYukle() async {
@@ -42,8 +28,7 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
     if (response.statusCode == 200) {
       List<dynamic> parsedResponse = jsonDecode(response.body);
       setState(() {
-        _ulkeler =
-            parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
+        _ulkeler = parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
         _rastgeleSoru();
       });
     } else {
@@ -57,33 +42,19 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
     _cevapVerildi = false;
     Map<String, dynamic> diller = _seciliUlke!.diller;
     _dogruDil = diller.values.first;
-    List<String>? tumDiller = _ulkeler
-        .expand((ulke) => ulke.diller.values)
-        .toSet()
-        .cast<String>()
-        .toList();
-    tumDiller!.shuffle();
-    _secenekDiller = tumDiller.take(9).toList();
+    List<String>? tumDiller = _ulkeler.expand((ulke) => ulke.diller.values).toSet().cast<String>().toList();
+    tumDiller.shuffle();
+    _secenekDiller = tumDiller.take(11).toList();
     _secenekDiller.add(_dogruDil);
     _secenekDiller.shuffle();
 
-    setState(() {
-      _animasyonOynat = false;
-    });
-
-    Future.delayed(Duration(milliseconds: 200), () {
-      setState(() {
-        _animasyonOynat = true;
-        _animasyonKontrol.forward(from: 0);
-      });
-    });
+    setState(() {});
   }
 
   void _kontrolEt(String secilenDil) {
     setState(() {
       _cevapVerildi = true;
       _dogruCevap = (secilenDil == _dogruDil);
-      _secenekDiller.clear(); // Cevap verildikten sonra seçenekleri gizle
     });
   }
 
@@ -93,8 +64,7 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Bilgi"),
-          content: Text(
-              "Bu oyun, ülkelerin hangi dili konuştuklarını sorar. İyi eğlenceler!"),
+          content: Text("Bu oyun, ülkelerin hangi dili konuştuklarını sorar. İyi eğlenceler!"),
           actions: [
             TextButton(
               child: Text("Tamam"),
@@ -114,8 +84,8 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Hangi Ülke Hangi Dili Konuşur?",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          "Hangi Ülke Hangi Dili Konuşur",
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.045,fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
         actions: [
@@ -133,6 +103,8 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
 
   Widget _buildBody() {
     return Container(
+      width: double.infinity,
+      height: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -147,60 +119,14 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildUlkeCard(_seciliUlke!),
-              SizedBox(height: 15),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Text(
                 "Dili Seçin:",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
+                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.06, fontWeight: FontWeight.w600, color: Colors.black),
               ),
-              SizedBox(height: 15),
-              if (!_cevapVerildi)
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: _buildDilButtons(),
-                ),
-              if (_cevapVerildi)
-                Column(
-                  children: [
-                    SizedBox(height: 30),
-                    FadeTransition(
-                      opacity: _animasyonKontrol,
-                      child: Icon(
-                        _dogruCevap ? Icons.check_circle : Icons.cancel,
-                        color: _dogruCevap ? Colors.green : Colors.red,
-                        size: 100,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      _dogruCevap ? "Doğru!" : "Yanlış!",
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Doğru Dil: $_dogruDil",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _rastgeleSoru,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text("Yeni Ülke",
-                          style: TextStyle(color: Colors.black,fontSize: 25)),
-                    ),
-                  ],
-                ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              if (!_cevapVerildi) _buildDilSecenekleri(),
+              if (_cevapVerildi) _buildCevapEkrani(),
             ],
           ),
         ),
@@ -208,15 +134,79 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget _buildDilSecenekleri() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: _secenekDiller.map((dil) {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width * 0.28,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              backgroundColor: Colors.yellow,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              if (!_cevapVerildi) {
+                _kontrolEt(dil);
+              }
+            },
+            child: Text(
+              dil,
+              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCevapEkrani() {
+    return Column(
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+        Icon(
+          _dogruCevap ? Icons.check_circle : Icons.cancel,
+          color: _dogruCevap ? Colors.green : Colors.red,
+          size: MediaQuery.of(context).size.width * 0.2,
+        ),
+        if (!_dogruCevap) ...[
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+          Text(
+            "Doğru Dil: $_dogruDil",
+            style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, color: Colors.white),
+          ),
+        ],
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+        ElevatedButton(
+          onPressed: _rastgeleSoru,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.yellow,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Text(
+            "Yeni Ülke",
+            style: TextStyle(color: Colors.black, fontSize: MediaQuery.of(context).size.width * 0.06),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildUlkeCard(Ulke ulke) {
     return Card(
-      elevation: 8,
-      color: Colors.white.withOpacity(0.85),
+      elevation: 6,
+      color: Colors.white.withOpacity(0.9),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+        padding: EdgeInsets.all(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -224,8 +214,8 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 ulke.bayrak,
-                width: 160, // Bayrak boyutu ayarlandı
-                height: 90,
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: MediaQuery.of(context).size.height * 0.15,
                 fit: BoxFit.cover,
               ),
             ),
@@ -233,41 +223,15 @@ class _DilOyunState extends State<YeniDil> with SingleTickerProviderStateMixin {
             Text(
               ulke.isim,
               style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple),
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  List<Widget> _buildDilButtons() {
-    return _secenekDiller.map((dil) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width *
-            0.4, // Buton genişliği, ekran boyutuna göre ayarlandı
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            backgroundColor: Colors.yellow,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          onPressed: _cevapVerildi
-              ? null
-              : () {
-                  _kontrolEt(dil);
-                },
-          child: Text(
-            dil,
-            style: TextStyle(fontSize: 16, color: Colors.black),
-          ),
-        ),
-      );
-    }).toList();
   }
 }
 

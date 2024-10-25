@@ -69,7 +69,7 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
         return AlertDialog(
           title: Text("Oyun Açıklaması"),
           content: Text("Bu oyunda iki ülkenin nüfusu karşılaştırılmaktadır ve "
-              "en kalabalık olanı bulmaya çalışacaksınız.İyi Eğlenceler"),
+              "en kalabalık olanı bulmaya çalışacaksınız. İyi Eğlenceler"),
           actions: [
             TextButton(
               child: Text("Tamam"),
@@ -91,7 +91,7 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
         title: Text(
           "HANGİ ÜLKE DAHA KALABALIK",
           style: TextStyle(
-            fontSize: 40,
+            fontSize: MediaQuery.of(context).size.width * 0.1,
           ),
         ),
         backgroundColor: Colors.purple,
@@ -130,26 +130,30 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
                   _buildUlkeCard(_ulke2!),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               if (_cevapVerildi)
                 Column(
                   children: [
                     Icon(
                       _dogruCevap ? Icons.check_circle : Icons.cancel,
                       color: _dogruCevap ? Colors.green : Colors.red,
-                      size: 90,
+                      size: MediaQuery.of(context).size.width * 0.15,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     Text(
                       _dogruCevap ? "Doğru!" : "Yanlış!",
-                      style: TextStyle(fontSize: 48, color: Colors.black54),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.08,
+                          color: Colors.black54),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     Text(
                       "Nüfuslar: ${_ulke1!.isim}: ${_ulke1!.nufus}, ${_ulke2!.isim}: ${_ulke2!.nufus}",
-                      style: TextStyle(fontSize: 30, color: Colors.black),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                          color: Colors.black),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                     ElevatedButton(
                       onPressed: _rastgeleSoru,
                       style: ElevatedButton.styleFrom(
@@ -157,21 +161,21 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                        padding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.of(context).size.height * 0.02,
+                          horizontal: MediaQuery.of(context).size.width * 0.1,
+                        ),
                       ),
                       child: Text(
                         "Yeni Soru",
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 35, // Yazı boyutunu büyüt
-
+                          fontSize: MediaQuery.of(context).size.width * 0.05, // Yazı boyutunu dinamik ayarlama
                           shadows: [
                             Shadow(
                               offset: Offset(1.0, 1.0),
                               blurRadius: 3.0,
-                              color:
-                                  Colors.black.withOpacity(0.3), // Gölge rengi
+                              color: Colors.black.withOpacity(0.3), // Gölge rengi
                             ),
                           ],
                         ),
@@ -195,15 +199,13 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
-          // Kart genişliğini artırdık
           padding: EdgeInsets.all(10), // İçerik için padding
           child: Column(
             children: [
-              // Bayrağın yüksekliğini artırdık ve sabit bir boyutta tutuyoruz
               Image.network(
                 ulke.bayrak,
-                width: 300, // Bayrak boyutunu artırdık
-                height: 200,
+                width: MediaQuery.of(context).size.width * 0.4, // Dinamik bayrak boyutu
+                height: MediaQuery.of(context).size.width * 0.25, // Dinamik bayrak yüksekliği
                 fit: BoxFit.contain, // Bayrak kesme ayarı
               ),
               SizedBox(height: 10),
@@ -211,8 +213,9 @@ class _NufusKarsilastirmaOyunuState extends State<NufusKarsilastirmaOyunu> {
                 ulke.isim,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold), // Font boyutunu artırdık
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontWeight: FontWeight.bold,
+                ), // Dinamik font boyutu
               ),
             ],
           ),

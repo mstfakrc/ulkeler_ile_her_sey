@@ -5,7 +5,6 @@ import 'package:ulkeleri_tani/ulke_detay_sayfasi.dart';
 
 class OrtakListe extends StatefulWidget {
   List<Ulke> _ulkeler = [];
-
   List<String> _favoriUlkeKodlari = [];
 
   OrtakListe(this._ulkeler, this._favoriUlkeKodlari);
@@ -17,9 +16,15 @@ class OrtakListe extends StatefulWidget {
 class _OrtakListeState extends State<OrtakListe> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget._ulkeler.length,
-      itemBuilder: _buildListItem,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ülkeler Listesi'),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        itemCount: widget._ulkeler.length,
+        itemBuilder: _buildListItem,
+      ),
     );
   }
 
@@ -27,11 +32,27 @@ class _OrtakListeState extends State<OrtakListe> {
     Ulke ulke = widget._ulkeler[index];
 
     return Card(
+      margin: EdgeInsets.symmetric(
+        vertical: MediaQuery.of(context).size.height * 0.01,
+        horizontal: MediaQuery.of(context).size.width * 0.03,
+      ),
       child: ListTile(
-        title: Text(ulke.isim),
-        subtitle: Text("Başkent: ${ulke.baskent}"),
+        title: Text(
+          ulke.isim,
+          style: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.05, // Font boyutu dinamik
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          "Başkent: ${ulke.baskent}",
+          style: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.04, // Font boyutu dinamik
+          ),
+        ),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(ulke.bayrak),
+          radius: MediaQuery.of(context).size.width * 0.1, // Dinamik yarıçap
         ),
         trailing: IconButton(
           icon: Icon(

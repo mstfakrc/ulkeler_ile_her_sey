@@ -17,8 +17,8 @@ class UlkeDetaySayfasi extends StatelessWidget {
   AppBar _buildAppBar() {
     return AppBar(
       centerTitle: true,
-      backgroundColor: Colors.lightBlueAccent, // Body ile aynı renk
-      elevation: 0, // Gölgeyi kaldır
+      backgroundColor: Colors.lightBlueAccent,
+      elevation: 0,
     );
   }
 
@@ -38,7 +38,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
             SizedBox(height: 16),
             _buildUlkeIsmiText(),
             SizedBox(height: 24),
-            _buildTumDetaylar(context), // context'i geç
+            _buildTumDetaylar(context),
           ],
         ),
       ),
@@ -47,7 +47,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
 
   Widget _buildTumDetaylar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16), // Yanlardan boşluk
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -55,7 +55,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
         ),
         child: Container(
           padding: const EdgeInsets.all(16),
-          height: MediaQuery.of(context).size.height * 0.6, // Yüksekliği ayarla
+          height: MediaQuery.of(context).size.height * 0.6,
           child: Column(
             children: [
               _buildDetayRow("Ülke İsmi: ", _ulke.isim),
@@ -77,9 +77,9 @@ class UlkeDetaySayfasi extends StatelessWidget {
   Widget _buildBayrak(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 32),
-      padding: EdgeInsets.all(8), // Çemberin içindeki boşluk
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        shape: BoxShape.circle, // Yuvarlak şekil
+        shape: BoxShape.circle,
         color: Colors.white,
         boxShadow: [
           BoxShadow(
@@ -92,8 +92,8 @@ class UlkeDetaySayfasi extends StatelessWidget {
       child: ClipOval(
         child: Image.network(
           _ulke.bayrak,
-          width: 200, // Çemberin genişliği
-          height: 200, // Çemberin yüksekliği
+          width: 200,
+          height: 200,
           fit: BoxFit.cover,
         ),
       ),
@@ -119,7 +119,7 @@ class UlkeDetaySayfasi extends StatelessWidget {
         style: TextStyle(
           fontSize: 48,
           fontWeight: FontWeight.bold,
-          color: Colors.deepPurpleAccent, // Renk uyumu için değiştirdim
+          color: Colors.deepPurpleAccent,
         ),
       ),
     );

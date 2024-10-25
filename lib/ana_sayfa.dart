@@ -49,11 +49,11 @@ class _AnaSayfaState extends State<AnaSayfa> {
       title: Row(
         children: [
           Container(
-            width: 50, 
+            width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.yellow, 
-              borderRadius: BorderRadius.circular(25), 
+              color: Colors.yellow,
+              borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
@@ -75,21 +75,25 @@ class _AnaSayfaState extends State<AnaSayfa> {
           ),
           SizedBox(width: 8),
           Expanded(
-            child: Text(
-              "KÜRESEL KEŞİF",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1.2,
+            child: Center(
+              // Metni ortalamak için Center widget'ı ekledik
+              child: Text(
+                "KÜRESEL KEŞİF",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width *
+                      0.04, // Dinamik font boyutu
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1.2,
+                ),
               ),
             ),
           ),
         ],
       ),
       centerTitle: false,
-      backgroundColor: Colors.deepPurpleAccent,
+      backgroundColor: Colors.purple,
       actions: [
         IconButton(
           icon: Icon(Icons.info_outline, color: Colors.white),
@@ -116,7 +120,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
           },
         ),
         IconButton(
-          icon: Icon(_aramaAktif ? Icons.clear : Icons.search, color: Colors.white),
+          icon: Icon(_aramaAktif ? Icons.clear : Icons.search,
+              color: Colors.white),
           onPressed: () {
             setState(() {
               _aramaAktif = !_aramaAktif;
@@ -142,7 +147,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.lightBlueAccent.withOpacity(0.5), Colors.white],
+          colors: [Colors.white, Colors.purple],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -200,7 +205,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
   void _aramaYap(String query) {
     setState(() {
       _aramaSonuclari = _butunUlkeler
-          .where((ulke) => ulke.isim.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (ulke) => ulke.isim.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -213,7 +219,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
       List<dynamic> parsedResponse = jsonDecode(response.body);
 
       setState(() {
-        _butunUlkeler = parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
+        _butunUlkeler =
+            parsedResponse.map((ulkeMap) => Ulke.fromMap(ulkeMap)).toList();
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

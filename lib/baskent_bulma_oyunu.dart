@@ -17,8 +17,8 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
   String _cevap = "";
   bool _dogruCevap = false;
   bool _cevapVerildi = false;
-  final TextEditingController _cevapController =
-      TextEditingController();
+  final TextEditingController _cevapController = TextEditingController();
+  double _bayrakBoyutu = 0.30; // Bayrak boyutu için başlangıç değeri
 
   @override
   void initState() {
@@ -45,6 +45,7 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
     _soruUlke = _ulkeler[random.nextInt(_ulkeler.length)];
     _cevap = "";
     _cevapVerildi = false;
+    _bayrakBoyutu = 0.25; // Bayrak boyutunu sıfırla
     _cevapController.clear();
     setState(() {});
   }
@@ -63,8 +64,11 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
 
     setState(() {
       _cevapVerildi = true;
-      _dogruCevap = _cevap.trim().toLowerCase() == 
+      _dogruCevap = _cevap.trim().toLowerCase() ==
           _soruUlke!.baskent.trim().toLowerCase();
+
+      // Bayrak boyutunu yalnızca cevap kontrol edildikten sonra değiştir
+      _bayrakBoyutu = _dogruCevap ? 0.2 : 0.15; // Doğruysa biraz küçültebiliriz
     });
   }
 
@@ -98,9 +102,7 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
         centerTitle: true,
         title: Text(
           "Başkent Bulma Oyunu",
-          style: TextStyle(
-            fontSize: 40,
-          ),
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05), // Dinamik font boyutu
         ),
         backgroundColor: Colors.red,
         actions: [
@@ -135,27 +137,29 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
             children: [
               Image.network(
                 _soruUlke!.bayrak,
-                width: 300,
-                height: 150,
+                width: MediaQuery.of(context).size.width * _bayrakBoyutu, // Dinamik bayrak boyutu
+                height: MediaQuery.of(context).size.height * _bayrakBoyutu, // Dinamik bayrak boyutu
+                fit: BoxFit.cover, // Resmi kapsayacak şekilde ayarla
               ),
-              SizedBox(height: 10),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
               Text(
                 _soruUlke!.isim,
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: MediaQuery.of(context).size.width * 0.06, // Dinamik font boyutu
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple),
+                textAlign: TextAlign.center, // Merkeze hizala
               ),
-              SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
               Text(
                 "Başkentini tahmin et:",
-                style: TextStyle(fontSize: 24, color: Colors.black),
+                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.06, color: Colors.black), // Dinamik font boyutu
               ),
-              SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.33,
+                  width: MediaQuery.of(context).size.width * 0.75, // Ekranın %75'i kadar genişlik
                   child: TextField(
                     controller: _cevapController,
                     onChanged: (value) {
@@ -178,25 +182,22 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
                         color: Colors.deepPurple.withOpacity(0.7),
                       ),
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 15,
+                        vertical: MediaQuery.of(context).size.height * 0.025, // Dinamik iç boşluk
                         horizontal: 20,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                            color: Colors.red, width: 2),
+                        borderSide: BorderSide(color: Colors.red, width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 2),
+                        borderSide: BorderSide(color: Colors.red, width: 2),
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
               if (!_cevapVerildi) ...[
                 ElevatedButton(
                   onPressed: _kontrolEt,
@@ -206,8 +207,8 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 24),
+                        vertical: MediaQuery.of(context).size.height * 0.025, // Dinamik buton yüksekliği
+                        horizontal: MediaQuery.of(context).size.width * 0.1), // Dinamik buton genişliği
                     elevation: 8,
                     shadowColor: Colors.red.withOpacity(0.5),
                   ),
@@ -215,48 +216,50 @@ class _BaskentBulmaOyunuState extends State<BaskentBulmaOyunu> {
                     "Kontrol Et",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: MediaQuery.of(context).size.width * 0.045, // Dinamik font boyutu
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ],
-              SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
               if (_cevapVerildi) ...[
                 Icon(
                   _dogruCevap ? Icons.check_circle : Icons.cancel,
                   color: _dogruCevap ? Colors.green : Colors.red,
-                  size: 100,
+                  size: MediaQuery.of(context).size.width * 0.2, // Dinamik ikon boyutu
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
                 Text(
                   _dogruCevap
-                      ? "Doğru!"
-                      : "Yanlış! Doğru cevap: ${_soruUlke!.baskent}",
-                  style: TextStyle(fontSize: 24, color: Colors.black),
-                  textAlign: TextAlign.center,
+                      ? "Doğru! Başkent: ${_soruUlke!.baskent}"
+                      : "Yanlış! Doğru başkent: ${_soruUlke!.baskent}",
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.045, // Dinamik font boyutu
+                    fontWeight: FontWeight.bold,
+                    color: _dogruCevap ? Colors.black : Colors.black,
+                  ),
+                  textAlign: TextAlign.center, // Merkeze hizala
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Dinamik boşluk
                 ElevatedButton(
-                  onPressed: () {
-                    _rastgeleSoru();
-                  },
+                  onPressed: _rastgeleSoru,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 32),
+                        vertical: MediaQuery.of(context).size.height * 0.025, // Dinamik buton yüksekliği
+                        horizontal: MediaQuery.of(context).size.width * 0.1), // Dinamik buton genişliği
                     elevation: 8,
-                    shadowColor: Colors.black.withOpacity(0.5),
+                    shadowColor: Colors.red.withOpacity(0.5),
                   ),
                   child: Text(
                     "Yeni Soru",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: MediaQuery.of(context).size.width * 0.045, // Dinamik font boyutu
                       fontWeight: FontWeight.bold,
                     ),
                   ),

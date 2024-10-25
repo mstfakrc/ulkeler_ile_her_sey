@@ -14,35 +14,70 @@ class Favoriler extends StatefulWidget {
 
 class _FavorilerState extends State<Favoriler> {
   List<Ulke> _favoriUlkeler = [];
+  String _aramaMetni = "";
 
   @override
   void initState() {
     super.initState();
-    for (Ulke ulke in widget._butunUlkeler) {
-      if (widget._favoriUlkeKodlari.contains(ulke.ulkeKodu)) {
-        _favoriUlkeler.add(ulke);
-      }
-    }
+    _favoriUlkeler = widget._butunUlkeler.where((ulke) => widget._favoriUlkeKodlari.contains(ulke.ulkeKodu)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: _buildBody(),
+      body: Column(
+        children: [
+          _buildSearchBar(), // Arama çubuğunu ekliyoruz
+          Expanded(child: _buildBody()),
+        ],
+      ),
     );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text("Favoriler", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      title: Text(
+        "Favoriler",
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
       centerTitle: true,
       backgroundColor: Colors.deepPurpleAccent, // Daha uyumlu bir renk
       elevation: 4, // Hafif gölge efekti
+      actions: [
+        IconButton(
+          icon: Icon(Icons.info_outline),
+          onPressed: () {
+            _showInfoDialog();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: TextField(
+        onChanged: (value) {
+          setState(() {
+            _aramaMetni = value;
+          });
+        },
+        decoration: InputDecoration(
+          hintText: "Ülke adını girin",
+          border: OutlineInputBorder(),
+          filled: true,
+          fillColor: Colors.white,
+          prefixIcon: Icon(Icons.search),
+        ),
+      ),
     );
   }
 
   Widget _buildBody() {
+    final filteredUlkeler = _favoriUlkeler.where((ulke) => ulke.isim.toLowerCase().contains(_aramaMetni.toLowerCase())).toList();
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -51,17 +86,35 @@ class _FavorilerState extends State<Favoriler> {
           end: Alignment.bottomCenter,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0), // Padding ekle
-        child: _favoriUlkeler.isNotEmpty
-            ? OrtakListe(_favoriUlkeler, widget._favoriUlkeKodlari)
-            : Center(
-                child: Text(
-                  "Favori ülkeniz yok!",
-                  style: TextStyle(fontSize: 20, color: Colors.black54),
-                ),
+      padding: const EdgeInsets.all(16.0), // Padding ekle
+      child: filteredUlkeler.isNotEmpty
+          ? OrtakListe(filteredUlkeler, widget._favoriUlkeKodlari)
+          : Center(
+              child: Text(
+                "Favori ülkeniz yok!",
+                style: TextStyle(fontSize: 20, color: Colors.black54),
               ),
-      ),
+            ),
+    );
+  }
+
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Açıklama"),
+          content: Text("Buradaki ülkeler favori olarak seçtiğiniz ülkelerdir."),
+          actions: [
+            TextButton(
+              child: Text("Tamam"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -42,33 +42,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        BottomAppBar(
-          color: Colors.purple, // Alt navigasyon arka planı
-          elevation: 10, // Gölgeli görünüm için
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment
-                .spaceAround, // İkonları eşit aralıkla yerleştir
-            children: [
-              _buildIconButton(Icons.star, 0), // "Sol Oyun" butonu
-              _buildIconButton(Icons.home, 1), // "Ana Sayfa" butonu
-              _buildIconButton(Icons.flag, 2), // "Sağ Oyun" butonu
-            ],
-          ),
-        ),
-      ],
+    return BottomAppBar(
+      color: Colors.purple, // Alt navigasyon arka planı
+      elevation: 10, // Gölgeli görünüm için
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround, // İkonları eşit aralıkla yerleştir
+        children: [
+          _buildIconButton(Icons.star, 0), // "Sol Oyun" butonu
+          _buildIconButton(Icons.home, 1), // "Ana Sayfa" butonu
+          _buildIconButton(Icons.flag, 2), // "Sağ Oyun" butonu
+        ],
+      ),
     );
   }
 
   Widget _buildIconButton(IconData icon, int index) {
+    double iconSize = MediaQuery.of(context).size.width * 0.1; // İkon boyutu ekranın %10'u
+
     return IconButton(
       icon: Icon(
         icon,
-        color: selectedIndex == index
-            ? Colors.yellow
-            : Colors.white, // Seçiliyse sarı
-        size: 30, // İkon boyutu
+        color: selectedIndex == index ? Colors.yellow : Colors.white, // Seçiliyse sarı
+        size: iconSize, // Dinamik ikon boyutu
       ),
       onPressed: () => handleButtonPress(index),
     );

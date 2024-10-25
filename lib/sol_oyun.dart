@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ulkeleri_tani/orta_oyun.dart';
-import 'bottom_navigation_bar.dart';
+import 'package:ulkeleri_tani/bottom_navigation_bar.dart';
+import 'package:ulkeleri_tani/sag_oyun.dart';
 import 'ana_sayfa.dart';
-import 'sag_oyun.dart';
 import 'hangisi_kalabalik.dart';
+import 'orta_oyun.dart';
 
 class SolOyun extends StatelessWidget {
   @override
@@ -14,185 +14,49 @@ class SolOyun extends StatelessWidget {
         title: Text(
           "Nüfuslar ve Bölgeler",
           style: TextStyle(
-            fontSize: 40,
             fontWeight: FontWeight.bold,
             color: Colors.white,
             letterSpacing: 1.5,
           ),
         ),
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: Colors.purple,
         automaticallyImplyLeading: false,
       ),
       body: Container(
-        // Arka plana degrade ekliyoruz
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.purpleAccent],
+            colors: [Colors.white, Colors.purple],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              // İlk Container
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(10), // Kenarlardan boşluk
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/aa.jpg'), // Arka plan resmi
-                      fit: BoxFit.cover, // Resmin alanı kaplaması için
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.people, // Dünya ikonu
-                          size: 100,
-                          color: Colors.yellow,
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          "Hangi Ülke Daha Kalabalık Oyunu",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 30),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      NufusKarsilastirmaOyunu()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 20),
-                            backgroundColor: Colors.deepPurple[800],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            elevation: 10, // Butona gölge efekti
-                            shadowColor: Colors.black26,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons
-                                    .play_arrow, // Butonun soluna oyun başlat ikonu
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "Oyunu Başlat",
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              buildGameCard(
+                context,
+                'assets/aa.jpg',
+                Icons.people,
+                "Hangi Ülke Daha Kalabalık Oyunu",
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NufusKarsilastirmaOyunu()),
+                  );
+                },
               ),
-
-              // İkinci Container
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(10), // Kenarlardan boşluk
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/bb.jpg'), // Arka plan resmi
-                      fit: BoxFit.cover, // Resmin alanı kaplaması için
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                       
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.public, // Dünya ikonu
-                          size: 100,
-                          color: Colors.yellow,
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          "Ülkeler Hangi Bölgede Oyunu", // İkinci oyunun başlığı
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 30),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => YeniOyun()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 20),
-                            backgroundColor: Colors.deepPurple[800],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            elevation: 10, // Butona gölge efekti
-                            shadowColor: Colors.black26,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons
-                                    .play_arrow, // Butonun soluna oyun başlat ikonu
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "Oyunu Başlat", // İkinci oyunun başlatma metni
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
+              buildGameCard(
+                context,
+                'assets/bb.jpg',
+                Icons.public,
+                "Ülkeler Hangi Bölgede Oyunu",
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>YeniOyun()),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -205,12 +69,109 @@ class SolOyun extends StatelessWidget {
           );
         },
         onSagOyunPressed: () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SagOyun()),
           );
         },
         onSolOyunPressed: () {},
+      ),
+    );
+  }
+
+  Widget buildGameCard(
+    BuildContext context,
+    String imagePath,
+    IconData icon,
+    String title,
+    VoidCallback onPressed,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Card(
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon,
+                    color: Colors.yellowAccent[400]!.withOpacity(0.8),
+                    shadows: [
+                      Shadow(
+                        blurRadius: 12.0,
+                        color: Colors.black.withOpacity(0.6),
+                        offset: Offset(3.0, 3.0),
+                      ),
+                    ],
+                  ),
+                  AnimatedContainer(
+                    duration: Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 15.0,
+                            color: Colors.black.withOpacity(0.6),
+                            offset: Offset(3.0, 3.0),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  ElevatedButton(
+                    onPressed: onPressed,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple[800],
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.3),
+                      elevation: 10,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.play_arrow, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text(
+                          "Oyunu Başlat",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
